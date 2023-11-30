@@ -1,8 +1,8 @@
-
 # Minimal GraphQL Laravel Client
 
 Minimal GraphQL client for Laravel.
 
+This is a fork of https://github.com/bendeckdavid/graphql-client that works in old PHP versions
 
 ## Requirements
 
@@ -19,7 +19,7 @@ composer require bendeckdavid/graphql-client
 
 ## Usage
 
-Enviroment variable 
+Enviroment variable
 ```php
 GRAPHQL_ENDPOINT="https://api.spacex.land/graphql/"
 ```
@@ -48,7 +48,7 @@ GRAPHQL_AUTHENTICATION="bearer"
 
 Import GraphQL Client Facades
 ```php
-use BendeckDavid\GraphqlClient\Facades\GraphQL;
+use MGierok\GraphqlClient\Facades\GraphQL;
 ```
 
 #### Basic use
@@ -191,5 +191,3 @@ return GraphQL::query($query)
 
 - Ryan Mayberry [@kerkness](https://github.com/kerkness)
 - Jamie Duong [@chiendv](https://github.com/chiendv)
-
-

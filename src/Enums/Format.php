@@ -1,6 +1,6 @@
 <?php
 
-namespace BendeckDavid\GraphqlClient\Enums;
+namespace MGierok\GraphqlClient\Enums;
 
 abstract class Format{
     const JSON = 'json';

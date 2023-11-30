@@ -1,6 +1,6 @@
 <?php
 
-namespace BendeckDavid\GraphqlClient\Enums;
+namespace MGierok\GraphqlClient\Enums;
 
 abstract class Request{
     const QUERY = 'query';
