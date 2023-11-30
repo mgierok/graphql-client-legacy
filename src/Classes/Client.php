@@ -1,30 +1,28 @@
 <?php
 
-namespace BendeckDavid\GraphqlClient\Classes;
+namespace MGierok\GraphqlClient\Classes;
 
 use Exception;
 use Illuminate\Support\Arr;
-use BendeckDavid\GraphqlClient\Enums\Format;
-use BendeckDavid\GraphqlClient\Enums\Request;
-use BendeckDavid\GraphqlClient\Classes\Mutator;
+use MGierok\GraphqlClient\Enums\Format;
+use MGierok\GraphqlClient\Enums\Request;
+use MGierok\GraphqlClient\Classes\Mutator;
 
 class Client extends Mutator {
 
-    private String $query;
-    public String $queryType;
-    protected string $token;
-    public Array $variables = [];
-    public Array $rawHeaders = [
+    private $query;
+    public $queryType;
+    protected $token;
+    public $variables = [];
+    public $rawHeaders = [
         'Content-Type' => 'application/json',
         'User-Agent' => 'Laravel GraphQL client',
     ];
-    public Array $context = [];
+    public $context = [];
 
-    public function __construct(
-        protected String|Null $endpoint
-    )
+    public function __construct($endpoint)
     {
-
+        $this->endpoint = $endpoint;
     }
 
     /**
@@ -34,10 +32,12 @@ class Client extends Mutator {
      */
     public function getRawQueryAttribute()
     {
-        $content = match($this->queryType){
-            Request::RAW => $this->query,
-            DEFAULT => "{$this->queryType} {{$this->query}}"
-        };
+        if (Request::RAW == $this->queryType) {
+            $content = $this>query;
+        }
+        else {
+            $content = "{$this->queryType} {{$this->query}}";
+        }
 
         return <<<"GRAPHQL"
         {$content}
@@ -108,7 +108,7 @@ class Client extends Mutator {
      *
      * @return Client
      */
-    public function header(String $key, String $value)
+    public function header($key, $value)
     {
         $this->rawHeaders = array_merge($this->rawHeaders, [
             $key => $value
@@ -123,19 +123,19 @@ class Client extends Mutator {
      *
      * @return Client
      */
-    public function context(Array $context)
+    public function context($context)
     {
         $this->context = $context;
         return $this;
     }
 
-    
+
     /**
      * Allow to pass multiple headers to the client
      *
      * @return Client
      */
-    public function withHeaders(Array $headers)
+    public function withHeaders($headers)
     {
         $this->rawHeaders = array_merge($this->rawHeaders, $headers);
 
@@ -148,7 +148,7 @@ class Client extends Mutator {
      *
      * @return Client
      */
-    public function with(Array $variables)
+    public function with($variables)
     {
         $this->variables = array_merge($this->variables, $variables);
 
@@ -161,7 +161,7 @@ class Client extends Mutator {
      *
      * @return Client
      */
-    private function generate(String $type, String $query)
+    private function generate($type, $query)
     {
         $this->queryType = $type;
         $this->query = $query;
@@ -175,7 +175,7 @@ class Client extends Mutator {
      *
      * @return Client
      */
-    public function query(string $query)
+    public function query($query)
     {
         return $this->generate(Request::QUERY, $query);
     }
@@ -186,7 +186,7 @@ class Client extends Mutator {
      *
      * @return Client
      */
-    public function mutation(string $query)
+    public function mutation($query)
     {
         return $this->generate(Request::MUTATION, $query);
     }
@@ -197,7 +197,7 @@ class Client extends Mutator {
      *
      * @return Client
      */
-    public function raw(string $query)
+    public function raw($query)
     {
         return $this->generate(Request::RAW, $query);
     }
@@ -208,7 +208,7 @@ class Client extends Mutator {
      *
      * @return Client
      */
-    public function endpoint(string $endpoint)
+    public function endpoint($endpoint)
     {
         $this->endpoint = $endpoint;
 
@@ -221,7 +221,7 @@ class Client extends Mutator {
      *
      * @return array
      */
-    public function makeRequest(string $format, bool $rawResponse = false)
+    public function makeRequest($format, $rawResponse = false)
     {
         try {
             $result = file_get_contents($this->endpoint, false, $this->request);
@@ -231,7 +231,7 @@ class Client extends Mutator {
                 return $response->data;
             } else {
                 $response = json_decode($result, true);
-                if ($rawResponse) return $response;                
+                if ($rawResponse) return $response;
                 return Arr::get($response, "data");
             }
 
@@ -244,10 +244,10 @@ class Client extends Mutator {
     /**
      * Return data
      * @param $format String (array|json) define return format, array by default
-     * 
+     *
      * @return array by default
      */
-    public function get(string $format = Format::ARRAY)
+    public function get($format = Format::ARRAY)
     {
         return $this->makeRequest($format);
     }
@@ -255,10 +255,10 @@ class Client extends Mutator {
     /**
      * Return raw response
      * @param $format String (array|json) define return format, array by default
-     * 
+     *
      * @return array by default
      */
-    public function getRaw(string $format = Format::ARRAY)
+    public function getRaw($format = Format::ARRAY)
     {
         return $this->makeRequest($format, true);
     }
