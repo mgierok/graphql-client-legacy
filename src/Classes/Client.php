@@ -33,7 +33,7 @@ class Client extends Mutator {
     public function getRawQueryAttribute()
     {
         if (Request::RAW == $this->queryType) {
-            $content = $this>query;
+            $content = $this->query;
         }
         else {
             $content = "{$this->queryType} {{$this->query}}";
