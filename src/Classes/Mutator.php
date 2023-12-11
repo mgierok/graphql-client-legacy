@@ -10,10 +10,10 @@ class Mutator {
     public function __get($key)
     {
         if(method_exists($this, 'get'.Str::studly($key).'Attribute')) {
-            $this->{'get'.Str::studly($key).'Attribute'}();
+            return $this->{'get'.Str::studly($key).'Attribute'}();
         }
         elseif (array_key_exists($key, $this->attributes)) {
-            $this->attributes[$key];
+            return $this->attributes[$key];
         }
     }
 
